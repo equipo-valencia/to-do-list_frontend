@@ -8,7 +8,10 @@ const generateTemplate = function(tarea){
     const html = `
         <li class="list-group-item d-flex justify-content-between align-items-center">
         <span>${tarea}</span>
-        <i class="far fa-trash-alt delete"></i>
+        
+            <i class="far fa-trash-alt delete"></i>
+            <i class="fas fa-pencil-alt pencil"></i>
+        
         </li>
     `;
 
@@ -56,14 +59,13 @@ addForm.addEventListener('submit', e => {
 listaTareas.addEventListener('click', e => {
 
 
-
     if(e.target.classList.contains('delete')){
 
         let paraborrar = e.target.parentElement
         // console.log(e.target)
         paraborrar.remove();
         let contenido = paraborrar.firstElementChild.textContent
-        console.log(paraborrar.firstElementChild.textContent)
+        // console.log(paraborrar.firstElementChild.textContent)
         var elimina = {todo: contenido };
 
         async function deleteData(url, data ) {
@@ -79,13 +81,37 @@ listaTareas.addEventListener('click', e => {
                 },
                 body: JSON.stringify(data) // body data type must match "Content-Type" header
             });
-            return response.json(); // parses JSON response into native JavaScript objects
-            }
+        }
             
-        deleteData(url, elimina)
-            .then(papelera => {
-                console.log(papelera); // JSON data parsed by `data.json()` call
+        deleteData(url, elimina);   
+    }else if(e.target.classList.contains('pencil')){
+        let tarea = e.target.parentElement.firstElementChild.textContent;
+
+        console.log('pencil apretado', tarea);
+
+        let actualizado = prompt('nuevo nombre');
+
+        var nuevonombre = {todo:tarea,
+                        newtodo: actualizado };
+
+        async function updateNombre(url, data ) {
+            // Opciones por defecto estan marcadas con un *
+            const response = await fetch(url, {
+                method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, *cors, same-origin
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(data) // body data type must match "Content-Type" header
             });
+        }
+
+        updateNombre(url,nuevonombre)
+
+        
     }
 
    
